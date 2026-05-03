@@ -9,11 +9,22 @@ const platRoutes = require('./routes/plats');
 const commandeRoutes = require('./routes/commandes');
 const errorHandler = require('./middleware/errorHandler');
 
+<<<<<<< HEAD
 // Charger les variables d'environnement (dans api/.env)
 dotenv.config(); // <-- pas besoin de préciser le chemin si tu lances depuis api/
 
 // Vérification
 console.log("MONGODB_URI =", process.env.MONGODB_URI);
+=======
+// Charger .env seulement en développement local
+// En Docker, les variables sont injectées par docker-compose
+const path = require('path');
+const fs = require('fs');
+const envPath = path.resolve(__dirname, '../../.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
+>>>>>>> origin/feature/docker-config
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -60,5 +71,10 @@ mongoose
     console.error('❌ Erreur de connexion à MongoDB :', err.message);
     process.exit(1);
   });
+<<<<<<< HEAD
 
 module.exports = app;
+=======
+  //ok
+module.exports = app;
+>>>>>>> origin/feature/docker-config

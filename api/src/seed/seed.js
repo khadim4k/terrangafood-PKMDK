@@ -3,7 +3,14 @@ const dotenv = require('dotenv');
 const Restaurant = require('../models/Restaurant');
 const Plat = require('../models/Plat');
 
-dotenv.config({ path: '../../.env' });
+// Charger .env seulement en développement local
+// En Docker, les variables sont injectées par docker-compose
+const path = require('path');
+const fs = require('fs');
+const envPath = path.resolve(__dirname, '../../../.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
 
 const restaurants = [
   {
@@ -102,16 +109,13 @@ async function seed() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connecté à MongoDB');
 
-    // Nettoyer les collections existantes
     await Restaurant.deleteMany({});
     await Plat.deleteMany({});
     console.log('🗑️  Collections nettoyées');
 
-    // Insérer les restaurants
     const savedRestaurants = await Restaurant.insertMany(restaurants);
     console.log(`🏪 ${savedRestaurants.length} restaurants insérés`);
 
-    // Insérer les plats avec les références aux restaurants
     let totalPlats = 0;
     for (const restaurant of savedRestaurants) {
       const platsData = platsParRestaurant[restaurant.nom];
