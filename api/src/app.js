@@ -6,11 +6,17 @@ const dotenv = require('dotenv');
 
 const restaurantRoutes = require('./routes/restaurants');
 const platRoutes = require('./routes/plats');
-const commandeRoutes = require('./routes/commandes'); // ✅ Import ajouté
+const commandeRoutes = require('./routes/commandes');
 const errorHandler = require('./middleware/errorHandler');
 
-// Charger les variables d'environnement
-dotenv.config({ path: '../.env' });
+// Charger .env seulement en développement local
+// En Docker, les variables sont injectées par docker-compose
+const path = require('path');
+const fs = require('fs');
+const envPath = path.resolve(__dirname, '../../.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -28,14 +34,14 @@ app.get('/', (req, res) => {
     endpoints: {
       restaurants: '/api/restaurants',
       plats: '/api/plats',
-      commandes: '/api/commandes' // ✅ Endpoints mis à jour
+      commandes: '/api/commandes'
     }
   });
 });
 
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/plats', platRoutes);
-app.use('/api/commandes', commandeRoutes); // ✅ Route branchée
+app.use('/api/commandes', commandeRoutes);
 
 // --- Gestion des erreurs ---
 app.use(errorHandler);
