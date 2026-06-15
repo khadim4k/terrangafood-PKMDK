@@ -14,7 +14,7 @@ export default async function HomePage() {
   return (
     <>
       <section className="hero">
-        <h1>🍛 Bienvenue sur TerrangaFood4</h1>
+        <h1>🍛 Bienvenue sur TerrangaFood</h1>
         <p>
           Découvrez les meilleurs restaurants de Dakar et commandez vos plats
           préférés en quelques clics.
